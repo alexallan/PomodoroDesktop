@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JavaFX 2.0 - Ensemble</title>
+<SCRIPT src="./web-files/dtjava.js"></SCRIPT>
+
+<script>
+    function javafxEmbed_ensemble() {
+        dtjava.embed(
+            {
+                id : 'ensemble',
+                url : 'Ensemble.jnlp',
+                placeholder : 'javafx-app-placeholder',
+                width : '100%',
+                height : '100%',
+                jnlp_content : 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxqbmxwIHNwZWM9IjEuMCIgeG1sbnM6amZ4PSJodHRwOi8vamF2YWZ4LmNvbSIgaHJlZj0iRW5zZW1ibGUuam5scCI+DQogIDxpbmZvcm1hdGlvbj4NCiAgICA8dGl0bGU+RW5zZW1ibGU8L3RpdGxlPg0KICAgIDx2ZW5kb3I+ZGVtbzwvdmVuZG9yPg0KICAgIDxkZXNjcmlwdGlvbj5TYW1wbGUgSmF2YUZYIDIuMCBhcHBsaWNhdGlvbi48L2Rlc2NyaXB0aW9uPg0KICAgIDxvZmZsaW5lLWFsbG93ZWQvPg0KICA8L2luZm9ybWF0aW9uPg0KICA8cmVzb3VyY2VzPg0KICAgIDxqZng6amF2YWZ4LXJ1bnRpbWUgdmVyc2lvbj0iMi4yKyIgaHJlZj0iaHR0cDovL2phdmFkbC5zdW4uY29tL3dlYmFwcHMvZG93bmxvYWQvR2V0RmlsZS9qYXZhZngtbGF0ZXN0L3dpbmRvd3MtaTU4Ni9qYXZhZngyLmpubHAiLz4NCiAgPC9yZXNvdXJjZXM+DQogIDxyZXNvdXJjZXM+DQogICAgPGoyc2UgdmVyc2lvbj0iMS42KyIgaHJlZj0iaHR0cDovL2phdmEuc3VuLmNvbS9wcm9kdWN0cy9hdXRvZGwvajJzZSIvPg0KICAgIDxqYXIgaHJlZj0iRW5zZW1ibGUuamFyIiBzaXplPSI4ODQ4MTU3IiBkb3dubG9hZD0iZWFnZXIiIC8+DQogIDwvcmVzb3VyY2VzPg0KPHNlY3VyaXR5Pg0KICA8YWxsLXBlcm1pc3Npb25zLz4NCjwvc2VjdXJpdHk+DQogIDxhcHBsZXQtZGVzYyAgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIG1haW4tY2xhc3M9ImNvbS5qYXZhZngubWFpbi5Ob0phdmFGWEZhbGxiYWNrIiAgbmFtZT0iRW5zZW1ibGUiID4NCiAgICA8cGFyYW0gbmFtZT0icmVxdWlyZWRGWFZlcnNpb24iIHZhbHVlPSIyLjIrIi8+DQogIDwvYXBwbGV0LWRlc2M+DQogIDxqZng6amF2YWZ4LWRlc2MgIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBtYWluLWNsYXNzPSJlbnNlbWJsZS5FbnNlbWJsZTIiICBuYW1lPSJFbnNlbWJsZSIgLz4NCiAgPHVwZGF0ZSBjaGVjaz0iYmFja2dyb3VuZCIvPg0KPC9qbmxwPg0K'
+            },
+            {
+                javafx : '2.2+'
+            },
+            {}
+        );
+    }
+    <!-- Embed FX application into web page once page is loaded -->
+    dtjava.addOnloadCallback(javafxEmbed_ensemble);
+</script>
+
+        <style>
+            html, body {  
+                margin: 0;  
+                overflow: hidden;  
+                padding: 0; 
+            }
+        </style>
+        <script>
+            function hashchanged(event) {
+                var applet = document.getElementById('ensemble');
+                if (applet != null) {
+                    try {
+                        applet.hashChanged(location.hash);
+                    } catch (err) {
+                        console.log("JS Exception when trying to pass hash to Ensmeble Applet: " + err);
+                    }
+                }
+            }
+        </script> 
+</head>
+<body onhashchange="hashchanged(event)"><div id='javafx-app-placeholder'></div></body>
+</html>

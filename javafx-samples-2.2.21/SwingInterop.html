@@ -1,0 +1,48 @@
+<html><head>
+  <SCRIPT src="./web-files/dtjava.js"></SCRIPT>
+<script>
+    function launchApplication(jnlpfile) {
+        dtjava.launch(            {
+                url : 'SwingInterop.jnlp',
+                jnlp_content : 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxqbmxwIHNwZWM9IjEuMCIgeG1sbnM6amZ4PSJodHRwOi8vamF2YWZ4LmNvbSIgaHJlZj0iU3dpbmdJbnRlcm9wLmpubHAiPg0KICA8aW5mb3JtYXRpb24+DQogICAgPHRpdGxlPlNhbXBsZSBhcHA6IFN3aW5nSW50ZXJvcDwvdGl0bGU+DQogICAgPHZlbmRvcj5PcmFjbGU8L3ZlbmRvcj4NCiAgICA8ZGVzY3JpcHRpb24+U2FtcGxlIEphdmFGWCAyLjAgYXBwbGljYXRpb24uPC9kZXNjcmlwdGlvbj4NCiAgICA8b2ZmbGluZS1hbGxvd2VkLz4NCiAgPC9pbmZvcm1hdGlvbj4NCiAgPHJlc291cmNlcz4NCiAgICA8amZ4OmphdmFmeC1ydW50aW1lIHZlcnNpb249IjIuMisiIGhyZWY9Imh0dHA6Ly9qYXZhZGwuc3VuLmNvbS93ZWJhcHBzL2Rvd25sb2FkL0dldEZpbGUvamF2YWZ4LWxhdGVzdC93aW5kb3dzLWk1ODYvamF2YWZ4Mi5qbmxwIi8+DQogIDwvcmVzb3VyY2VzPg0KICA8cmVzb3VyY2VzPg0KICAgIDxqMnNlIHZlcnNpb249IjEuNisiIGhyZWY9Imh0dHA6Ly9qYXZhLnN1bi5jb20vcHJvZHVjdHMvYXV0b2RsL2oyc2UiLz4NCiAgICA8amFyIGhyZWY9IlN3aW5nSW50ZXJvcC5qYXIiIHNpemU9IjMxMzgwIiBkb3dubG9hZD0iZWFnZXIiIC8+DQogIDwvcmVzb3VyY2VzPg0KPHNlY3VyaXR5Pg0KICA8YWxsLXBlcm1pc3Npb25zLz4NCjwvc2VjdXJpdHk+DQogIDxhcHBsaWNhdGlvbi1kZXNjIG1haW4tY2xhc3M9InN3aW5naW50ZXJvcC5Td2luZ0ludGVyb3AiICBuYW1lPSJTd2luZ0ludGVyb3AiID4NCiAgPC9hcHBsaWNhdGlvbi1kZXNjPg0KICA8dXBkYXRlIGNoZWNrPSJiYWNrZ3JvdW5kIi8+DQo8L2pubHA+DQo='
+            },
+            {
+                javafx : '2.2+'
+            },
+            {}
+        );
+        return false;
+    }
+</script>
+
+<script>
+    function javafxEmbed_swingFXApp() {
+        dtjava.embed(
+            {
+                id : 'swingFXApp',
+                toolkit : 'swing',
+                url : 'SwingInterop_browser.jnlp',
+                placeholder : 'javafx-app-placeholder',
+                width : 960,
+                height : 720,
+                jnlp_content : 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxqbmxwIHNwZWM9IjEuMCIgeG1sbnM6amZ4PSJodHRwOi8vamF2YWZ4LmNvbSIgaHJlZj0iU3dpbmdJbnRlcm9wX2Jyb3dzZXIuam5scCI+DQogIDxpbmZvcm1hdGlvbj4NCiAgICA8dGl0bGU+U2FtcGxlIGFwcDogU3dpbmdJbnRlcm9wPC90aXRsZT4NCiAgICA8dmVuZG9yPk9yYWNsZTwvdmVuZG9yPg0KICAgIDxkZXNjcmlwdGlvbj5TYW1wbGUgSmF2YUZYIDIuMCBhcHBsaWNhdGlvbi48L2Rlc2NyaXB0aW9uPg0KICAgIDxvZmZsaW5lLWFsbG93ZWQvPg0KICA8L2luZm9ybWF0aW9uPg0KICA8cmVzb3VyY2VzPg0KICAgIDxqZng6amF2YWZ4LXJ1bnRpbWUgdmVyc2lvbj0iMi4yKyIgaHJlZj0iaHR0cDovL2phdmFkbC5zdW4uY29tL3dlYmFwcHMvZG93bmxvYWQvR2V0RmlsZS9qYXZhZngtbGF0ZXN0L3dpbmRvd3MtaTU4Ni9qYXZhZngyLmpubHAiLz4NCiAgPC9yZXNvdXJjZXM+DQogIDxyZXNvdXJjZXM+DQogICAgPGoyc2UgdmVyc2lvbj0iMS42KyIgaHJlZj0iaHR0cDovL2phdmEuc3VuLmNvbS9wcm9kdWN0cy9hdXRvZGwvajJzZSIvPg0KICAgIDxqYXIgaHJlZj0iU3dpbmdJbnRlcm9wLmphciIgc2l6ZT0iMzEzODAiIGRvd25sb2FkPSJlYWdlciIgLz4NCiAgPC9yZXNvdXJjZXM+DQo8c2VjdXJpdHk+DQogIDxhbGwtcGVybWlzc2lvbnMvPg0KPC9zZWN1cml0eT4NCiAgPGFwcGxldC1kZXNjICB3aWR0aD0iOTYwIiBoZWlnaHQ9IjcyMCIgbWFpbi1jbGFzcz0ic3dpbmdpbnRlcm9wLlN3aW5nSW50ZXJvcCIgIG5hbWU9IlN3aW5nSW50ZXJvcCIgPg0KICA8L2FwcGxldC1kZXNjPg0KICA8dXBkYXRlIGNoZWNrPSJiYWNrZ3JvdW5kIi8+DQo8L2pubHA+DQo='
+            },
+            {
+                javafx : '2.2+'
+            },
+            {
+                onGetSplash : function() {}
+            }
+        );
+    }
+    <!-- Embed FX application into web page once page is loaded -->
+    dtjava.addOnloadCallback(javafxEmbed_swingFXApp);
+</script>
+
+</head><body>
+<h2>Test page for <b>SwingInterop</b></h2>
+  <b>Webstart:</b> <a href='SwingInterop.jnlp' onclick="return launchApplication('SwingInterop.jnlp');">click to launch this app as webstart</a><br><hr><br>
+
+  <!-- Applet will be inserted here -->
+  <div id='javafx-app-placeholder'></div>
+</body></html>
