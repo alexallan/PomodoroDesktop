@@ -13,12 +13,12 @@ import javafx.beans.property.StringProperty;
  * @author Alex
  *
  */
- public class Task {
+ public class WillyTask {
         private StringProperty taskName;
         private IntegerProperty completedPoms;
         private LongProperty dateStartedMilis;
 
-        public Task(String fName) {
+        public WillyTask(String fName) {
             this.taskName = new SimpleStringProperty(fName);
             this.completedPoms = new SimpleIntegerProperty(0);
             this.dateStartedMilis = new SimpleLongProperty(System.currentTimeMillis());

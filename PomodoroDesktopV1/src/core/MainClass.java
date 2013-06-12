@@ -6,6 +6,8 @@ package core;
 
 import java.text.DecimalFormat;
 
+import objects.WillyTask;
+
 import com.sun.media.jfxmedia.events.PlayerEvent;
 
 import javafx.animation.Animation.Status;
@@ -75,7 +77,8 @@ public class MainClass extends Application {
     private Timeline time = new Timeline();
     
     /** The number of milliseconds in a 25 minute pomodoro*/
-    public static final int pomodoroMillis = 25*60*1000;
+    //public static final int pomodoroMillis = 25*60*1000;
+    public static final int pomodoroMillis = 3*1000; // for debugging
     
     /** The number of milliseconds in the 5 minute break*/
     public static final int breakMillis = 5*60*1000;
@@ -97,7 +100,7 @@ public class MainClass extends Application {
 	/** The table view selection model for the task table*/
 	private TableViewSelectionModel selectedTask;
 	/** the current task object*/
-	private Task currentTask;
+	private WillyTask currentTask;
     
     
 
@@ -132,10 +135,13 @@ public class MainClass extends Application {
 				 startStop.setText("Start");
 				 
 					selectedTask = taskTable.getSelectionModel();
+					currentTask = (WillyTask) selectedTask.getSelectedItem();
 					  
 				
 			}
         });
+        	
+        	
         
     
 		}
@@ -246,6 +252,8 @@ public class MainClass extends Application {
     	
     	startStop = new Button("Start");
     	
+    	
+    	
     	// set the listener for this button - eg what happens when its pressed
     	startStop.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
@@ -256,7 +264,15 @@ public class MainClass extends Application {
         });
     	
     	 newTask = new Button ("New Task");
+    	 
+    	 newTask.setOnAction(new EventHandler<ActionEvent>() {
+             public void handle(ActionEvent t) {
 
+             	// starts or stops the timer
+                 startStop();
+             }
+         });
+    	 
         return ToolBarBuilder.create().id(id).items(
 
                 startStop,
@@ -304,7 +320,12 @@ public class MainClass extends Application {
         
         if (millisLeft <= 0 )
         {
+        
+        	
+        	currentTask.completedPomsProperty().set(currentTask.completedPomsProperty().intValue()+1);
         	PlaySounds.playAlarmSound();
+        	startStop();
+        	
         	// finished a pomodoro
         	
         }

@@ -3,7 +3,7 @@ package tables;
  * Copyright (c) 2008, 2012 Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  */
-import objects.Task;
+import objects.WillyTask;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,14 +25,14 @@ import javafx.stage.Stage;
  */
 public class CreateTable  {
    
-	public  static TableView<Task> makeDefaultTable() {
+	public  static TableView<WillyTask> makeDefaultTable() {
         Group root = new Group();
        
         
-        final ObservableList<Task> data = FXCollections.observableArrayList(
-            new Task("Twist Balls" ),
-            new Task("Wrangle Cock" ),
-            new Task("Pillage Gubbinz" )
+        final ObservableList<WillyTask> data = FXCollections.observableArrayList(
+            new WillyTask("Twist Balls" ),
+            new WillyTask("Wrangle Cock" ),
+            new WillyTask("Pillage Gubbinz" )
 
         );
         
@@ -51,7 +51,7 @@ public class CreateTable  {
         dateCol.setMinWidth(200);
         dateCol.setCellValueFactory(new PropertyValueFactory("dateStartedMilis"));
         
-        TableView<Task> tableView = new TableView<Task>();
+        TableView<WillyTask> tableView = new TableView<WillyTask>();
         tableView.setItems(data);
         tableView.getColumns().addAll(taskNameCol, pomsCompletedColumn, dateCol);
     
@@ -61,12 +61,12 @@ public class CreateTable  {
 	
 	// to have on click events we need to define a custom table cell factory
 
-	public static TableView<Task> makeTableWithClickListeners(GenericCellFactory cellFactory)
+	public static TableView<WillyTask> makeTableWithClickListeners(GenericCellFactory cellFactory)
 	{
-		final ObservableList<Task> data = FXCollections.observableArrayList(
-	            new Task("Twist Balls" ),
-	            new Task("Wrangle Cock" ),
-	            new Task("Pillage Gubbinz" )
+		final ObservableList<WillyTask> data = FXCollections.observableArrayList(
+	            new WillyTask("Twist Balls" ),
+	            new WillyTask("Wrangle Cock" ),
+	            new WillyTask("Pillage Gubbinz" )
 
 	        );
 	        
@@ -85,7 +85,7 @@ public class CreateTable  {
 	        dateCol.setMinWidth(200);
 	        dateCol.setCellValueFactory(cellFactory);
 	        
-	        TableView<Task> tableView = new TableView<Task>();
+	        TableView<WillyTask> tableView = new TableView<WillyTask>();
 	        tableView.setItems(data);
 	        tableView.getColumns().addAll(taskNameCol, pomsCompletedColumn, dateCol);
 	        
