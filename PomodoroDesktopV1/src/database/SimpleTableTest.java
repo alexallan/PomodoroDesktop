@@ -1,12 +1,28 @@
+package database;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
+public class SimpleTableTest {
 
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		
+		
 
-
-public class dbTest {
-	public static void main(String args[]) {
+	}
+	
+	
+	/** Establishes connection to database TODO make this happen in a seperate thread - */
+	public static boolean establishConnection(String password)
+	{
+		
+		
 		try {
 			Statement stmt;
 
@@ -23,7 +39,7 @@ public class dbTest {
 			// This user is the default administrator
 			// having full privileges to do anything.
 			Connection con = DriverManager.getConnection(url, "pomodoro",
-					"qrBBvDVM2hFnVYuH");
+					password);
 
 			// Display URL and connection information
 			System.out.println("URL: " + url);
@@ -35,7 +51,9 @@ public class dbTest {
 			System.out.println("Closing connection: " + con);
 			con.close();
 		} catch (Exception e) {
-			e.printStackTrace();
-		}// end catch
-	}// end main
-}// end class dbTest
+			return false;
+		}
+		return true;
+	}
+
+}
