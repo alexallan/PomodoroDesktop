@@ -32,6 +32,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import database.HandlePasswords;
  
 public class QueryViewer extends Application {
  
@@ -103,17 +105,25 @@ public class QueryViewer extends Application {
     final HBox databasePane = new HBox(5);
     final TextField databaseTextField = new TextField();
     databaseTextField.setPromptText("Enter database URL here");
+    databaseTextField.setPrefWidth(400);
+    databaseTextField.setText("jdbc:mysql://aws.6p-milk.com:3306/pomodoro");
     databasePane.getChildren().addAll(new Label("Database: "), databaseTextField);
     final HBox usernamePane = new HBox(5);
     final TextField userTextField = new TextField();
+    userTextField.setPrefWidth(400);
+    userTextField.setText("pomodoro");
     usernamePane.getChildren().addAll(new Label("Username:"), userTextField);
     final HBox passwordPane = new HBox(5);
     final PasswordField passwordField = new PasswordField();
+    passwordField.setPrefWidth(400);
+    passwordField.setText(database.HandlePasswords.checkForPasswordFile());
     passwordPane.getChildren().addAll(new Label("Password: "), passwordField);
  
     final HBox sqlStatementPane = new HBox(5);
     final TextField queryTextField = new TextField();
+    queryTextField.setPrefWidth(600);
     queryTextField.setPromptText("Enter SQL query here");
+    queryTextField.setText("SELECT * FROM table1");
     final Button executeQueryButton = new Button("Execute Query");
     final TableView<Map<String, Object>> table = new TableView<Map<String, Object>>();
     sqlStatementPane.getChildren().addAll(new Label("SQL Query:"), queryTextField, executeQueryButton);
@@ -148,6 +158,8 @@ public class QueryViewer extends Application {
     final HBox driverManagerTop = new HBox(5);
     final TextField driverTextField = new TextField();
     driverTextField.setPromptText("Enter JDBC Driver Name");
+    driverTextField.setPrefWidth(300);
+    driverTextField.setText("com.mysql.jdbc.Driver");
     final Button driverLoadButton = new Button("Load");
     final ListView<Class<? extends Driver>> driverList = new ListView<Class<? extends Driver>>();
     EventHandler<ActionEvent> loadDriverHandler = new EventHandler<ActionEvent>() {
@@ -171,6 +183,16 @@ public class QueryViewer extends Application {
         driverTextField, driverLoadButton);
     driverManager.setTop(driverManagerTop);
     driverManager.setCenter(driverList);
+    try {
+        @SuppressWarnings("unchecked")
+        Class<Driver> cls = (Class<Driver>) Class.forName(driverTextField
+            .getText());
+        driverList.getItems().add(cls);
+      } catch (ClassNotFoundException e) {
+        handleError("Could not find class " + driverTextField.getText(), e);
+      } catch (ClassCastException e) {
+        handleError("Class " + driverTextField.getText()+ " does not appear to be a Driver", e);
+      }
     return driverManager;
   }
  
