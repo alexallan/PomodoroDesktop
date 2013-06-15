@@ -16,6 +16,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,6 +32,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -58,46 +63,80 @@ public class QueryViewer extends Application {
     }
   }
  
-  private void populateTableFromQuery(String databaseURL, String user,
+  private void runQuery(String databaseURL, String user,
       String password, String query, TableView<Map<String, Object>> table) {
     System.out.println("Populating table using " + query);
-    try (
-        Connection conn = DriverManager.getConnection(databaseURL, user, password);
-        Statement stmt = conn.createStatement();
-        ResultSet results = stmt.executeQuery(query);
-    ) {
-      ResultSetMetaData metadata = results.getMetaData();
-      currentDatabaseFields.clear();
-      table.getColumns().clear();
-      System.out.printf("Retrieved %d columns:%n", metadata.getColumnCount());
-      for (int i = 1; i <= metadata.getColumnCount(); i++) {
-        final String columnName = metadata.getColumnName(i);
-        System.out.println("column name: " + columnName);
-        currentDatabaseFields.add(columnName);
-        final TableColumn<Map<String, Object>, Object> col = new TableColumn<Map<String, Object>, Object>(columnName);
-        col.setCellValueFactory(new Callback<CellDataFeatures<Map<String, Object>, Object>, ObservableValue<Object>>() {
-          @Override
-          public ObservableValue<Object> call(
-              CellDataFeatures<Map<String, Object>, Object> cdf) {
-            return new ReadOnlyObjectWrapper<Object>(cdf.getValue().get(columnName));
-          }
-        });
-        table.getColumns().add(col);
-      }
-      table.getItems().clear();
-      int rowCount = 0;
-      while (results.next()) {
-        rowCount++;
-        Map<String, Object> rowData = new HashMap<String, Object>();
-        for (String col : currentDatabaseFields) {
-          rowData.put(col, results.getString(col));
-        }
-        table.getItems().add(rowData);
-      }
-      System.out.println("Retrieved " + rowCount + " rows");
-    } catch (Exception exc) {
-      handleError("Could not execute query " + query, exc);
-    }
+	if (query.startsWith("INSERT") // example query INSERT INTO table1 VALUES (0, "Hello World!", 0, "2013-06-15 08:00:00.0")
+			|| query.startsWith("UPDATE") // example query UPDATE table1 SET numberOfPomodorosSpent=1 WHERE uniqueId=5
+			|| query.startsWith("DELETE")) // example query DELETE FROM table1 WHERE uniqueId=4
+	{
+	    try (
+		        Connection conn = DriverManager.getConnection(databaseURL, user, password);
+		        Statement stmt = conn.createStatement();
+		    ) {
+	    	stmt.executeUpdate(query);
+	    } catch (Exception exc) {
+		      handleError("Could not execute query " + query, exc);
+	    }
+
+	}
+	else if (query.startsWith("SELECT")) // example query "SELECT * FROM table1"
+	{
+	    try (
+	        Connection conn = DriverManager.getConnection(databaseURL, user, password);
+	        Statement stmt = conn.createStatement();
+	    	ResultSet results = stmt.executeQuery(query);
+	    ) {
+	      ResultSetMetaData metadata = results.getMetaData();
+	      currentDatabaseFields.clear();
+	      table.getColumns().clear();
+	      System.out.printf("Retrieved %d columns:%n", metadata.getColumnCount());
+	      for (int i = 1; i <= metadata.getColumnCount(); i++) {
+	        final String columnName = metadata.getColumnName(i);
+	        System.out.println("column name: " + columnName);
+	        currentDatabaseFields.add(columnName);
+	        final TableColumn<Map<String, Object>, Object> col = new TableColumn<Map<String, Object>, Object>(columnName);
+	        col.setCellValueFactory(new Callback<CellDataFeatures<Map<String, Object>, Object>, ObservableValue<Object>>() {
+	          @Override
+	          public ObservableValue<Object> call(
+	              CellDataFeatures<Map<String, Object>, Object> cdf) {
+	            return new ReadOnlyObjectWrapper<Object>(cdf.getValue().get(columnName));
+	          }
+	        });
+	        table.getColumns().add(col);
+	      }
+	      table.getItems().clear();
+	      int rowCount = 0;
+	      while (results.next()) {
+	        rowCount++;
+	        Map<String, Object> rowData = new HashMap<String, Object>();
+	        for (String col : currentDatabaseFields) {
+	          rowData.put(col, results.getString(col));
+	        }
+	        table.getItems().add(rowData);
+	      }
+	      System.out.println("Retrieved " + rowCount + " rows");
+	    } catch (Exception exc) {
+	      handleError("Could not execute query " + query, exc);
+	    }
+	}
+	else // unrecognized query
+	{
+		final Stage dialogStage = new Stage();
+		Button btnInvalidQueryAccept = new Button("Sorry");
+		btnInvalidQueryAccept.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				dialogStage.close();
+			}
+		});
+
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		dialogStage.setScene(new Scene(VBoxBuilder.create()
+				.children(new Text("Stop being a twat and use a proper SQL query"), btnInvalidQueryAccept)
+				.alignment(Pos.CENTER).padding(new Insets(5))
+				.build()));
+		dialogStage.show();
+	}
   }
  
   private VBox createQueryPane() {
@@ -132,7 +171,7 @@ public class QueryViewer extends Application {
     final EventHandler<ActionEvent> queryHandler = new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
-        populateTableFromQuery(databaseTextField.getText(),
+        runQuery(databaseTextField.getText(),
             userTextField.getText(), passwordField.getText(),
             queryTextField.getText(), table);
       }
