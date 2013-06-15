@@ -33,6 +33,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -75,12 +77,12 @@ public class QueryViewer extends Application {
 		        Statement stmt = conn.createStatement();
 		    ) {
 	    	stmt.executeUpdate(query);
+	    	conn.close();
 	    } catch (Exception exc) {
 		      handleError("Could not execute query " + query, exc);
 	    }
-
 	}
-	else if (query.startsWith("SELECT")) // example query "SELECT * FROM table1"
+	else if (query.startsWith("SELECT")) // example query SELECT * FROM table1
 	{
 	    try (
 	        Connection conn = DriverManager.getConnection(databaseURL, user, password);
@@ -116,6 +118,7 @@ public class QueryViewer extends Application {
 	        table.getItems().add(rowData);
 	      }
 	      System.out.println("Retrieved " + rowCount + " rows");
+	      conn.close();
 	    } catch (Exception exc) {
 	      handleError("Could not execute query " + query, exc);
 	    }
@@ -147,17 +150,31 @@ public class QueryViewer extends Application {
     databaseTextField.setPrefWidth(400);
     databaseTextField.setText("jdbc:mysql://aws.6p-milk.com:3306/pomodoro");
     databasePane.getChildren().addAll(new Label("Database: "), databaseTextField);
-    final HBox usernamePane = new HBox(5);
-    final TextField userTextField = new TextField();
-    userTextField.setPrefWidth(400);
-    userTextField.setText("pomodoro");
-    usernamePane.getChildren().addAll(new Label("Username:"), userTextField);
     final HBox passwordPane = new HBox(5);
     final PasswordField passwordField = new PasswordField();
     passwordField.setPrefWidth(400);
     passwordField.setText(database.HandlePasswords.checkForPasswordFile());
     passwordPane.getChildren().addAll(new Label("Password: "), passwordField);
+    final HBox usernamePane = new HBox(5);
+    final TextField userTextField = new TextField();
+    userTextField.setPrefWidth(400);
+    userTextField.setText("pomodoro");
+    usernamePane.getChildren().addAll(new Label("Username:"), userTextField);
  
+    VBox pooPane = new VBox(5);
+    Text tSqlExampleTitle = new Text("\tSQL Examples:");
+    tSqlExampleTitle.setFill(Color.rgb(33, 99, 99));
+    Text tSqlExampleSelect = new Text("\t\tSELECT * FROM table1");
+    tSqlExampleSelect.setFill(Color.rgb(33, 99, 99));
+    Text tSqlExampleInsert = new Text("\t\tINSERT INTO table1 VALUES (0, \"Hello World!\", 0, \"2013-06-15 08:00:00.0\")");
+    tSqlExampleInsert.setFill(Color.rgb(33, 99, 99));
+    Text tSqlExampleUpdate = new Text("\t\tUPDATE table1 SET numberOfPomodorosSpent=1 WHERE uniqueId=5");
+    tSqlExampleUpdate.setFill(Color.rgb(33, 99, 99));
+    Text tSqlExampleDelete = new Text("\t\tDELETE FROM table1 WHERE uniqueId=4");
+    tSqlExampleDelete.setFill(Color.rgb(33, 99, 99));
+    pooPane.getChildren().addAll(tSqlExampleTitle, tSqlExampleSelect, tSqlExampleInsert, tSqlExampleUpdate, tSqlExampleDelete);
+ 
+
     final HBox sqlStatementPane = new HBox(5);
     final TextField queryTextField = new TextField();
     queryTextField.setPrefWidth(600);
@@ -166,7 +183,7 @@ public class QueryViewer extends Application {
     final Button executeQueryButton = new Button("Execute Query");
     final TableView<Map<String, Object>> table = new TableView<Map<String, Object>>();
     sqlStatementPane.getChildren().addAll(new Label("SQL Query:"), queryTextField, executeQueryButton);
-    queryPane.getChildren().addAll(databasePane, usernamePane, passwordPane, sqlStatementPane, table);
+    queryPane.getChildren().addAll(databasePane, usernamePane, passwordPane, pooPane, sqlStatementPane, table);
     VBox.setVgrow(table, Priority.ALWAYS);
     final EventHandler<ActionEvent> queryHandler = new EventHandler<ActionEvent>() {
       @Override
