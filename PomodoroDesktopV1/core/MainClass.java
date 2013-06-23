@@ -2,12 +2,6 @@ package core;
 
 import java.text.DecimalFormat;
 
-import objects.WillyTask;
-
-import com.sun.media.jfxmedia.events.PlayerEvent;
-
-import database.HandlePasswords;
-
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -39,11 +33,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import objects.WillyTask;
 import sounds.PlaySounds;
 import tables.CreateTable;
 import tables.GenericCellFactory;
+import database.HandlePasswords;
 
 public class MainClass extends Application {
 
@@ -263,45 +258,7 @@ public class MainClass extends Application {
 		}
 	}
 
-	private void setupTableListeners() {
-
-		// Create a context menu
-		ContextMenu menu = new ContextMenu();
-		MenuItem item = new MenuItem("View Task");
-
-		item.setOnAction(new EventHandler() {
-			@Override
-			public void handle(Event event) {
-				Task task = (Task) taskTable.getSelectionModel()
-						.getSelectedItem();
-				// do something
-
-			}
-		});
-		menu.getItems().addAll(item);
-
-		// Create a click event that looks for double clicks
-		EventHandler click = new EventHandler() {
-			public void handle(MouseEvent t) {
-				if (t.getClickCount() >= 1) {
-					Task task = (Task) taskTable.getItems().get(
-							((TableCell) t.getSource()).getIndex());
-					System.out.println("task name: " + task.getTitle());
-				}
-			}
-
-			@Override
-			public void handle(Event event) {
-				// TODO Auto-generated method stub
-
-			}
-		};
-
-		GenericCellFactory cellFactory = new GenericCellFactory(click, menu);
-		taskTable = CreateTable.makeTableWithClickListeners(cellFactory);
-
-	}
-
+	
 	/**
 	 * Creates the main toolbar and sets up all the buttons
 	 * 

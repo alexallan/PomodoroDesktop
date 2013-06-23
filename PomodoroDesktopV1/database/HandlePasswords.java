@@ -20,7 +20,7 @@ public class HandlePasswords {
 	 * @return
 	 */
 	public static boolean checkIfRightPW(String pw) {
-		return SimpleTableTest.establishConnection(pw);
+		return DatabaseQuerys.testConnection(pw);
 	}
 
 	/**
