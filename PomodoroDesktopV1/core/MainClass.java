@@ -105,6 +105,9 @@ public class MainClass extends Application {
 	private void init(Stage primaryStage) {
 		Group root = new Group();
 		primaryStage.setScene(new Scene(root));
+		
+		// create the password field
+		setupPWField();
 
 		// configure the timeline - deals with passing of time
 		configureTimeline();
@@ -201,8 +204,7 @@ public class MainClass extends Application {
 		clockProgressContainer.add(progressIdicator, 1, 0);
 		clockProgressContainer.setAlignment(Pos.CENTER);
 
-		// create the password field
-		setupPWField();
+
 
 		// put all the views together in the window
 		root.getChildren().add(

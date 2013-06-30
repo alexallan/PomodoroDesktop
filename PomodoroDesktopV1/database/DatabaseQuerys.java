@@ -69,6 +69,8 @@ public class DatabaseQuerys {
 			String tableName) {
 		ResultSet tableContents = null;
 		try {
+			
+		
 			Statement stmt;
 
 			// Register the JDBC driver for MySQL.
