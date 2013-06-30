@@ -42,7 +42,8 @@ import database.HandlePasswords;
 
 public class MainClass extends Application {
 
-	public final static boolean NO_DATABASE = true;
+	/** For debugging - determines whether we use the database*/
+	public final static boolean NO_DATABASE = false;
 
 	/** The password for the database */
 	private static String databasePassword;
@@ -122,22 +123,37 @@ public class MainClass extends Application {
 		// Set up the task list
 		if (NO_DATABASE) {
 			taskTable = CreateTable.makeDefaultTable();
-			taskTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent click) {
-					startStop.setText("Start");
-
-					selectedTask = taskTable.getSelectionModel();
-					currentTask = (WillyTask) selectedTask.getSelectedItem();
-
-				}
-			});
+			
 
 		} else {
 			// get table from DB
-		}
 
+			Thread popFromDBThread = new Thread() {
+				public void run() {
+					
+					taskTable = CreateTable.populateTaskTableFromDB();
+					
+					
+				}
+
+			};
+			
+			popFromDBThread.start();
+			
+		}
+		
+		// set up the mouse click listener so we know which task has been selected in the table
+		taskTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent click) {
+				startStop.setText("Start");
+
+				selectedTask = taskTable.getSelectionModel();
+				currentTask = (WillyTask) selectedTask.getSelectedItem();
+
+			}
+		});
 		// set the font for the clock text TODO make this changeable in the
 		// options
 		int fontSize = 50;
@@ -200,65 +216,62 @@ public class MainClass extends Application {
 	}
 
 	/**
-	 * Sets up the password field at the top and checks if there is a pre existing .scrote with the pw in it
+	 * Sets up the password field at the top and checks if there is a pre
+	 * existing .scrote with the pw in it
 	 */
 	private void setupPWField() {
-		
+
 		// do we need to get the password or is it already in file?
-		
+
 		String pw = HandlePasswords.checkForPasswordFile();
 		// if its null or doesnt work that means we need to enter it
-		if ( pw == null || !HandlePasswords.checkIfRightPW(pw))
-		{
-		Label label = new Label("Database Password");
-		final PasswordField pb = new PasswordField();
-		Button pwSubmit = new Button("Submit");
+		if (pw == null || !HandlePasswords.checkIfRightPW(pw)) {
+			Label label = new Label("Database Password");
+			final PasswordField pb = new PasswordField();
+			Button pwSubmit = new Button("Submit");
 
-		pwSubmit.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
+			pwSubmit.setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent event) {
 
-				// if the passwords wrong show a dialog - loads of code
-				setDatabasePassword(pb.getText());
-				if (!HandlePasswords.checkIfRightPW(pb.getText())) {
-					final Stage dialogStage = new Stage();
-					Button cunt = new Button("Im a cunt.");
-					cunt.setOnAction(new EventHandler<ActionEvent>() {
-						public void handle(ActionEvent event) {
-							dialogStage.close();
-						}
-					});
+					// if the passwords wrong show a dialog - loads of code
+					setDatabasePassword(pb.getText());
+					if (!HandlePasswords.checkIfRightPW(pb.getText())) {
+						final Stage dialogStage = new Stage();
+						Button cunt = new Button("Im a cunt.");
+						cunt.setOnAction(new EventHandler<ActionEvent>() {
+							public void handle(ActionEvent event) {
+								dialogStage.close();
+							}
+						});
 
-					dialogStage.initModality(Modality.WINDOW_MODAL);
-					dialogStage.setScene(new Scene(VBoxBuilder.create()
-							.children(new Text("Pasword wrong"), cunt)
-							.alignment(Pos.CENTER).padding(new Insets(5))
-							.build()));
-					dialogStage.show();
-				} else {
-					// password right - close the stage and write it to file
-					HandlePasswords.writePwFile(pb.getText());
-					pwGrid.setVisible(false);
-					pwGrid.setScaleX(0);
+						dialogStage.initModality(Modality.WINDOW_MODAL);
+						dialogStage.setScene(new Scene(VBoxBuilder.create()
+								.children(new Text("Pasword wrong"), cunt)
+								.alignment(Pos.CENTER).padding(new Insets(5))
+								.build()));
+						dialogStage.show();
+					} else {
+						// password right - close the stage and write it to file
+						HandlePasswords.writePwFile(pb.getText());
+						pwGrid.setVisible(false);
+						pwGrid.setScaleX(0);
 
+					}
 				}
-			}
-		});
+			});
 
-		// add text to the main root group
+			// add text to the main root group
 
-		pwGrid = new GridPane();
-		pwGrid.add(label, 0, 0);
-		pwGrid.add(pb, 1, 0);
-		pwGrid.add(pwSubmit, 2, 0);
-		pwGrid.setHgap(10);
-		}
-		else
-		{// else just make pw grid an empty cunt
+			pwGrid = new GridPane();
+			pwGrid.add(label, 0, 0);
+			pwGrid.add(pb, 1, 0);
+			pwGrid.add(pwSubmit, 2, 0);
+			pwGrid.setHgap(10);
+		} else {// else just make pw grid an empty cunt
 			pwGrid = new GridPane();
 		}
 	}
 
-	
 	/**
 	 * Creates the main toolbar and sets up all the buttons
 	 * 

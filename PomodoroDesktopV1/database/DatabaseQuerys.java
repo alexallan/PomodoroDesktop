@@ -65,7 +65,7 @@ public class DatabaseQuerys {
 	 * @param tableName
 	 * @return a results set object
 	 */
-	public static ResultSet grabTableContentsAsSimpleStringMatrix(
+	public synchronized static ResultSet pullTableContents(
 			String tableName) {
 		ResultSet tableContents = null;
 		try {

@@ -18,7 +18,22 @@ import javafx.beans.property.StringProperty;
         private IntegerProperty completedPoms;
         private LongProperty dateStartedMilis;
 
+        /**
+         * Constructor for when this is a new task which doesnt come from the DB
+         * @param fName the name of the task
+         */
         public WillyTask(String fName) {
+            this.taskName = new SimpleStringProperty(fName);
+            this.completedPoms = new SimpleIntegerProperty(0);
+            this.dateStartedMilis = new SimpleLongProperty(System.currentTimeMillis());
+        }
+        /**
+         * Constructor for when we are populating the table from the database
+         * @param fName
+         * @param completedPoms
+         * @param dateStarted
+         */
+        public WillyTask(String fName, int completedPoms, int dateStarted) {
             this.taskName = new SimpleStringProperty(fName);
             this.completedPoms = new SimpleIntegerProperty(0);
             this.dateStartedMilis = new SimpleLongProperty(System.currentTimeMillis());
