@@ -123,27 +123,7 @@ public class MainClass extends Application {
 		// grey out start stop button
 		startStop.setText("--");
 
-		// Set up the task list
-		if (NO_DATABASE) {
-			taskTable = CreateTable.makeDefaultTable();
-			
 
-		} else {
-			// get table from DB
-
-			Thread popFromDBThread = new Thread() {
-				public void run() {
-					
-					taskTable = CreateTable.populateTaskTableFromDB();
-					
-					
-				}
-
-			};
-			
-			popFromDBThread.start();
-			
-		}
 		
 		// set up the mouse click listener so we know which task has been selected in the table
 		taskTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -214,6 +194,36 @@ public class MainClass extends Application {
 						.padding(new Insets(10))
 						.children(pwGrid, clockProgressContainer, darkToolbar,
 								taskTable).build());
+		
+		
+		// Set up the task list
+		if (NO_DATABASE) {
+			taskTable = CreateTable.makeDefaultTable();
+			
+
+		} else {
+			// get table from DB
+			
+			
+
+			taskTable = CreateTable.populateTaskTableFromDB();
+			
+			
+			// make this threaded when it works :D: :D:D:D:D ::ADS~Fasdf
+//			
+//			Thread popFromDBThread = new Thread() {
+//				public void run() {
+//					
+//					taskTable = CreateTable.populateTaskTableFromDB();
+//					
+//					
+//				}
+//
+//			};
+//			
+//			popFromDBThread.start();
+			
+		}
 
 	}
 
@@ -251,7 +261,8 @@ public class MainClass extends Application {
 								.children(new Text("Pasword wrong"), cunt)
 								.alignment(Pos.CENTER).padding(new Insets(5))
 								.build()));
-						dialogStage.show();
+						// this waits on the user input before continuing with the code
+						dialogStage.showAndWait();
 					} else {
 						// password right - close the stage and write it to file
 						HandlePasswords.writePwFile(pb.getText());

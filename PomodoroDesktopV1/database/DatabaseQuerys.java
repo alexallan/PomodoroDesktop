@@ -11,13 +11,6 @@ import core.GlobalConstants;
 
 public class DatabaseQuerys {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
 
 	/**
 	 * Establishes connection to database TODO make this happen in a seperate
@@ -94,7 +87,7 @@ public class DatabaseQuerys {
 
 			// try and get the table
 			stmt = con.createStatement();
-			String query = "select all from " + tableName + " ;";
+			String query = "select * from " + tableName + " ;";
 			tableContents = stmt.executeQuery(query);
 
 			// Tidy up
