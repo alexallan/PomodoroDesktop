@@ -13,14 +13,18 @@ public class HandlePasswords {
 	/** The password for the database*/
 	private static String password;
 
+	/** The username to set*/
+	private static String username;
+	
+	
 	/**
 	 * Attempts to connect to the database using the given password - returns
 	 * true if it worked
 	 * 
 	 * @return
 	 */
-	public static boolean checkIfRightPW(String pw) {
-		return DatabaseQuerys.testConnection(pw);
+	public static boolean checkIfRightPW(String uName, String pw) {
+		return DatabaseQuerys.testConnection(uName,pw);
 	}
 
 	/**
@@ -30,14 +34,7 @@ public class HandlePasswords {
 		return password;
 	}
 
-	/**
-	 * @param password
-	 *            the password to set
-	 */
-	public static void setPassword(String password) {
-		HandlePasswords.password = password;
-	}
-
+	
 	/**
 	 * checks for the existance of password file
 	 * 
@@ -92,5 +89,23 @@ public class HandlePasswords {
 		}
 		return true;
 	}
+
+	/**
+	 * 
+	 * @param dbUsername the username to set
+	 */					
+	public static void setUsername(String dbUsername) {
+
+		username = dbUsername;
+		
+	}
+	/**
+	 * @param password
+	 *            the password to set
+	 */
+	public static void setPassword(String password) {
+		HandlePasswords.password = password;
+	}
+
 
 }

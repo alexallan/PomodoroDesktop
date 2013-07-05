@@ -16,7 +16,7 @@ public class DatabaseQuerys {
 	 * Establishes connection to database TODO make this happen in a seperate
 	 * thread -
 	 */
-	public static boolean testConnection(String password) {
+	public static boolean testConnection(String username, String password) {
 
 		try {
 			Statement stmt;
@@ -34,7 +34,7 @@ public class DatabaseQuerys {
 			// This user is the default administrator
 			// having full privileges to do anything.
 			Connection con = DriverManager.getConnection(url,
-					GlobalConstants.DB_USERNAME, HandlePasswords.getPassword());
+					username, HandlePasswords.getPassword());
 
 			// Display URL and connection information
 			System.out.println("URL: " + url);
