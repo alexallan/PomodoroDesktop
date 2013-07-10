@@ -2,11 +2,7 @@ package core;
 
 import java.text.DecimalFormat;
 
-import objects.WillyTask;
-
-import com.sun.media.jfxmedia.events.PlayerEvent;
-
-import database.HandlePasswords;
+import com.sun.corba.se.impl.orbutil.closure.Constant;
 
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -39,24 +35,25 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import login.PasswordDialogService;
+import login.PasswordDialogService.DialogService;
+import objects.WillyTask;
 import sounds.PlaySounds;
 import tables.CreateTable;
 import tables.GenericCellFactory;
+import database.HandlePasswords;
 
 public class MainClass extends Application {
 
-	public final static boolean NO_DATABASE = true;
-
-	/** The password for the database */
-	private static String databasePassword;
+	/** For debugging - determines whether we use the database */
+	public final static boolean NO_DATABASE = false;
 
 	/** holds the pw field, can be made to dissapear if the password was right */
 	private GridPane pwGrid;
 
 	/** The table which contains all the tasks */
-	private TableView taskTable;
+	public static TableView taskTable;
 
 	/** The button that starts and pauses the timer */
 	private Button startStop;
@@ -106,6 +103,9 @@ public class MainClass extends Application {
 	/** the current task object */
 	private WillyTask currentTask;
 
+	/** The login dialog service */
+	private DialogService dialogService;
+
 	private void init(Stage primaryStage) {
 		Group root = new Group();
 		primaryStage.setScene(new Scene(root));
@@ -124,25 +124,22 @@ public class MainClass extends Application {
 		// grey out start stop button
 		startStop.setText("--");
 
-		// Set up the task list
-		if (NO_DATABASE) {
-			taskTable = CreateTable.makeDefaultTable();
-			taskTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		// make an default table initially
+		taskTable = CreateTable.makeDefaultTable();
 
-				@Override
-				public void handle(MouseEvent click) {
-					startStop.setText("Start");
+		// set up the mouse click listener so we know which task has been
+		// selected in the table
+		taskTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-					selectedTask = taskTable.getSelectionModel();
-					currentTask = (WillyTask) selectedTask.getSelectedItem();
+			@Override
+			public void handle(MouseEvent click) {
+				startStop.setText("Start");
 
-				}
-			});
+				selectedTask = taskTable.getSelectionModel();
+				currentTask = (WillyTask) selectedTask.getSelectedItem();
 
-		} else {
-			// get table from DB
-		}
-
+			}
+		});
 		// set the font for the clock text TODO make this changeable in the
 		// options
 		int fontSize = 50;
@@ -190,116 +187,106 @@ public class MainClass extends Application {
 		clockProgressContainer.add(progressIdicator, 1, 0);
 		clockProgressContainer.setAlignment(Pos.CENTER);
 
-		// create the password field
-		setupPWField();
-
 		// put all the views together in the window
 		root.getChildren().add(
 				VBoxBuilder
 						.create()
 						.spacing(2)
 						.padding(new Insets(10))
-						.children(pwGrid, clockProgressContainer, darkToolbar,
+						.children(clockProgressContainer, darkToolbar,
 								taskTable).build());
+
+		// Set up the task list
+		if (!NO_DATABASE) {
+			// get table from DB
+
+			// create the password field and populate the table from DB
+			setupPWField(primaryStage);
+			// taskTable = CreateTable.populateTaskTableFromDB();
+
+			// make this threaded when it works :D: :D:D:D:D ::ADS~Fasdf
+			//
+			// Thread popFromDBThread = new Thread() {
+			// public void run() {
+			//
+			// taskTable = CreateTable.populateTaskTableFromDB();
+			//
+			//
+			// }
+			//
+			// };
+			//
+			// popFromDBThread.start();
+
+		}
 
 	}
 
 	/**
-	 * Sets up the password field at the top and checks if there is a pre existing .scrote with the pw in it
+	 * Sets up the password field at the top and checks if there is a pre
+	 * existing .scrote with the pw in it
 	 */
-	private void setupPWField() {
-		
+	private void setupPWField(Stage primaryStage) {
+
 		// do we need to get the password or is it already in file?
-		
 		String pw = HandlePasswords.checkForPasswordFile();
 		// if its null or doesnt work that means we need to enter it
-		if ( pw == null || !HandlePasswords.checkIfRightPW(pw))
-		{
-		Label label = new Label("Database Password");
-		final PasswordField pb = new PasswordField();
-		Button pwSubmit = new Button("Submit");
+		if (pw == null || !HandlePasswords.checkIfRightPW(GlobalConstants.DB_USERNAME,pw)) {
 
-		pwSubmit.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-
-				// if the passwords wrong show a dialog - loads of code
-				setDatabasePassword(pb.getText());
-				if (!HandlePasswords.checkIfRightPW(pb.getText())) {
-					final Stage dialogStage = new Stage();
-					Button cunt = new Button("Im a cunt.");
-					cunt.setOnAction(new EventHandler<ActionEvent>() {
-						public void handle(ActionEvent event) {
-							dialogStage.close();
-						}
-					});
-
-					dialogStage.initModality(Modality.WINDOW_MODAL);
-					dialogStage.setScene(new Scene(VBoxBuilder.create()
-							.children(new Text("Pasword wrong"), cunt)
-							.alignment(Pos.CENTER).padding(new Insets(5))
-							.build()));
-					dialogStage.show();
-				} else {
-					// password right - close the stage and write it to file
-					HandlePasswords.writePwFile(pb.getText());
-					pwGrid.setVisible(false);
-					pwGrid.setScaleX(0);
-
-				}
+			if (dialogService != null) {
+				dialogService.hide();
 			}
-		});
+			PasswordDialogService login = new PasswordDialogService();
+			dialogService = login.createLoginDialog(primaryStage);
+			dialogService.start();
 
-		// add text to the main root group
-
-		pwGrid = new GridPane();
-		pwGrid.add(label, 0, 0);
-		pwGrid.add(pb, 1, 0);
-		pwGrid.add(pwSubmit, 2, 0);
-		pwGrid.setHgap(10);
+//			Label label = new Label("Database Password");
+//			final PasswordField pb = new PasswordField();
+//			Button pwSubmit = new Button("Submit");
+//
+//			pwSubmit.setOnAction(new EventHandler<ActionEvent>() {
+//				public void handle(ActionEvent event) {
+//
+//					// if the passwords wrong show a dialog - loads of code
+//					setDatabaseUsernameAndPassword(pb.getText());
+//					if (!HandlePasswords.checkIfRightPW(pb.getText())) {
+//						final Stage dialogStage = new Stage();
+//						Button cunt = new Button("Im a cunt.");
+//						cunt.setOnAction(new EventHandler<ActionEvent>() {
+//							public void handle(ActionEvent event) {
+//								dialogStage.close();
+//							}
+//						});
+//
+//						dialogStage.initModality(Modality.WINDOW_MODAL);
+//						dialogStage.setScene(new Scene(VBoxBuilder.create()
+//								.children(new Text("Pasword wrong"), cunt)
+//								.alignment(Pos.CENTER).padding(new Insets(5))
+//								.build()));
+//						// this waits on the user input before continuing with
+//						// the code
+//						dialogStage.showAndWait();
+//					} else {
+//						// password right - close the stage and write it to file
+//						HandlePasswords.writePwFile(pb.getText());
+//						pwGrid.setVisible(false);
+//						pwGrid.setScaleX(0);
+//
+//					}
+//				}
+//			});
+//
+//			// add text to the main root group
+//
+//			pwGrid = new GridPane();
+//			pwGrid.add(label, 0, 0);
+//			pwGrid.add(pb, 1, 0);
+//			pwGrid.add(pwSubmit, 2, 0);
+//			pwGrid.setHgap(10);
+//		} else {// else just make pw grid an empty cunt
+//			pwGrid = new GridPane();
+//		}
 		}
-		else
-		{// else just make pw grid an empty cunt
-			pwGrid = new GridPane();
-		}
-	}
-
-	private void setupTableListeners() {
-
-		// Create a context menu
-		ContextMenu menu = new ContextMenu();
-		MenuItem item = new MenuItem("View Task");
-
-		item.setOnAction(new EventHandler() {
-			@Override
-			public void handle(Event event) {
-				Task task = (Task) taskTable.getSelectionModel()
-						.getSelectedItem();
-				// do something
-
-			}
-		});
-		menu.getItems().addAll(item);
-
-		// Create a click event that looks for double clicks
-		EventHandler click = new EventHandler() {
-			public void handle(MouseEvent t) {
-				if (t.getClickCount() >= 1) {
-					Task task = (Task) taskTable.getItems().get(
-							((TableCell) t.getSource()).getIndex());
-					System.out.println("task name: " + task.getTitle());
-				}
-			}
-
-			@Override
-			public void handle(Event event) {
-				// TODO Auto-generated method stub
-
-			}
-		};
-
-		GenericCellFactory cellFactory = new GenericCellFactory(click, menu);
-		taskTable = CreateTable.makeTableWithClickListeners(cellFactory);
-
 	}
 
 	/**
@@ -454,20 +441,16 @@ public class MainClass extends Application {
 		launch(args);
 	}
 
-	/**
-	 * @return the databasePassword
-	 */
-	public static String getDatabasePassword() {
-		return databasePassword;
-	}
+	
 
 	/**
 	 * @param databasePassword
 	 *            the databasePassword to set
 	 */
-	public static void setDatabasePassword(String databasePassword) {
-		MainClass.databasePassword = databasePassword;
+	public static void setDatabaseUsernameAndPassword(String dbUsername,String databasePassword) {
+		
 		HandlePasswords.setPassword(databasePassword);
+		HandlePasswords.setUsername(dbUsername);
 	}
 
 }
