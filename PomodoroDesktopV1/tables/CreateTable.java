@@ -70,37 +70,7 @@ public class CreateTable {
 		// we want to populate the table from the database using a new thread
 		// (so it doesnt lag to fuck)
 
-		ResultSet results = (ResultSet) DatabaseQuerys
-				.pullTableContents(GlobalConstants.TABLE_NAME_TASK);
-		if (results != null) {
-
-		} else {
-			// database error
-			System.err
-					.println("Couldnt get task table from DB, using defaults");
-			makeDefaultTable();
-		}
-
-		Group root = new Group();
-
-		// go through the resultset object and them to an observable list
-
-		ObservableList<WillyTask> data = FXCollections.observableArrayList();
-
-		try {
-			while (results.next()) {
-				// add a new task from the result object
-				data.add(new WillyTask(results
-						.getString(GlobalConstants.COL_TASKNAME), results
-						.getInt(GlobalConstants.COL_NUM_SPENT), results
-						.getInt(GlobalConstants.COL_DATE_CREATED)));
-
-			}
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
-
+		ObservableList<WillyTask>  data = DatabaseQuerys.pullTaskTable();
 	
 		TableColumn taskNameCol = new TableColumn();
 		taskNameCol.setText("Task Name");

@@ -48,6 +48,9 @@ public class MainClass extends Application {
 
 	/** For debugging - determines whether we use the database */
 	public final static boolean NO_DATABASE = false;
+	
+	/** Describes the current status of connectivity to the database*/
+	public static Text dataBaseConnectionStatus;
 
 	/** holds the pw field, can be made to dissapear if the password was right */
 	private GridPane pwGrid;
@@ -112,6 +115,9 @@ public class MainClass extends Application {
 
 		// configure the timeline - deals with passing of time
 		configureTimeline();
+		
+		// data base connectivity text
+		dataBaseConnectionStatus = new Text("No Database Connection");
 
 		// Set up the toolbar
 		String styledToolBarCss = MainClass.class.getResource(
@@ -193,7 +199,7 @@ public class MainClass extends Application {
 						.create()
 						.spacing(2)
 						.padding(new Insets(10))
-						.children(clockProgressContainer, darkToolbar,
+						.children(dataBaseConnectionStatus,clockProgressContainer, darkToolbar,
 								taskTable).build());
 
 		// Set up the task list
@@ -239,6 +245,32 @@ public class MainClass extends Application {
 			PasswordDialogService login = new PasswordDialogService();
 			dialogService = login.createLoginDialog(primaryStage);
 			dialogService.start();
+			
+//			// if the pw was wrong give them X tries to go again
+//			if ( !HandlePasswords.gotCorrectPW())
+//			{
+//				for (int x = 0 ; x < 3; x++)
+//				{
+//					// try another pw
+//					login = new PasswordDialogService();
+//					dialogService = login.createLoginDialog(primaryStage);
+//					dialogService.start();
+//					
+//					//if we now have the right password break the loop
+//					if (HandlePasswords.gotCorrectPW())
+//						break;
+//					
+//				}
+//				
+//				// if we still dont have the right pw 
+//				
+//				if ( !HandlePasswords.gotCorrectPW())
+//				{
+//					System.err.println( "Got password wrong to many times, noob");
+//					//exit the program
+//					System.exit(0);
+//				}
+//			}
 
 //			Label label = new Label("Database Password");
 //			final PasswordField pb = new PasswordField();

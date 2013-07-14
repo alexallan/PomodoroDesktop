@@ -3,7 +3,12 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import objects.WillyTask;
 
 import com.sun.org.apache.bcel.internal.Constants;
 
@@ -13,13 +18,14 @@ public class DatabaseQuerys {
 
 
 	/**
-	 * Establishes connection to database TODO make this happen in a seperate
+	 * Establishes connection to database TODO make this happen in a separate
 	 * thread -
 	 */
 	public static boolean testConnection(String username, String password) {
 
 		try {
 			Statement stmt;
+			
 
 			// Register the JDBC driver for MySQL.
 			Class.forName(GlobalConstants.DB_MSQLREGISTRY);
@@ -34,7 +40,9 @@ public class DatabaseQuerys {
 			// This user is the default administrator
 			// having full privileges to do anything.
 			Connection con = DriverManager.getConnection(url,
-					username, HandlePasswords.getPassword());
+					username, password);
+			
+			
 
 			// Display URL and connection information
 			System.out.println("URL: " + url);
@@ -58,9 +66,9 @@ public class DatabaseQuerys {
 	 * @param tableName
 	 * @return a results set object
 	 */
-	public synchronized static ResultSet pullTableContents(
-			String tableName) {
+	public synchronized static ObservableList<WillyTask> pullTaskTable() {
 		ResultSet tableContents = null;
+		ObservableList<WillyTask> data = null;
 		try {
 			
 		
@@ -87,8 +95,25 @@ public class DatabaseQuerys {
 
 			// try and get the table
 			stmt = con.createStatement();
-			String query = "select * from " + tableName + " ;";
+			String query = "select * from " + GlobalConstants.TABLE_NAME_TASK + " ;";
 			tableContents = stmt.executeQuery(query);
+			
+			// put the database results object in an observable list
+			data = FXCollections.observableArrayList();
+
+			try {
+				while (tableContents.next()) {
+					// add a new task from the result object
+					data.add(new WillyTask(tableContents
+							.getString(GlobalConstants.COL_TASKNAME), tableContents
+							.getInt(GlobalConstants.COL_NUM_SPENT), tableContents
+							.getInt(GlobalConstants.COL_DATE_CREATED)));
+
+				}
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
 
 			// Tidy up
 			System.out.println("Closing connection: " + con);
@@ -96,7 +121,7 @@ public class DatabaseQuerys {
 		} catch (Exception e) {
 			return null;
 		}
-		return tableContents;
+		return data;
 	}
 
 }

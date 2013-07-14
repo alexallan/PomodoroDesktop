@@ -11,10 +11,10 @@ import java.io.IOException;
 public class HandlePasswords {
 
 	/** The password for the database*/
-	private static String password;
+	private static String password = null;
 
 	/** The username to set*/
-	private static String username;
+	private static String username = null;
 	
 	
 	/**
@@ -105,6 +105,18 @@ public class HandlePasswords {
 	 */
 	public static void setPassword(String password) {
 		HandlePasswords.password = password;
+	}
+	
+	/**
+	 * Checks if the password we last tried was correct
+	 * @return true if it was
+	 */
+	public static boolean gotCorrectPW()
+	{
+		if (password == null)
+			return false;
+		
+		return true;
 	}
 
 

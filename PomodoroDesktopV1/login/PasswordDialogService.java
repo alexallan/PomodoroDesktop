@@ -124,29 +124,15 @@ public class PasswordDialogService extends Application {
                         	
                         	boolean passwordRight = HandlePasswords.checkIfRightPW(username.getText(),password.getText());
 
-        					if (!HandlePasswords.checkIfRightPW(username.getText(),password.getText())) {
-//        						final Stage dialogStage = new Stage();
-//        						Button cunt = new Button("Im a cunt.");
-//        						cunt.setOnAction(new EventHandler<ActionEvent>() {
-//        							public void handle(ActionEvent event) {
-//        								dialogStage.close();
-//        							}
-//        						});
-//
-//        						dialogStage.initModality(Modality.WINDOW_MODAL);
-//        						dialogStage.setScene(new Scene(VBoxBuilder.create()
-//        								.children(new Text("Pasword wrong"), cunt)
-//        								.alignment(Pos.CENTER).padding(new Insets(5))
-//        								.build()));
-//        						// this waits on the user input before continuing with
-//        						// the code
-//        						dialogStage.showAndWait();
+        					if (!passwordRight) {
+        						   throw new RuntimeException("Invalid Username or Password");
         					} else {
         						// password right - close the stage and write it to file
             					MainClass.setDatabaseUsernameAndPassword(username.getText(),password.getText());
         						HandlePasswords.writePwFile(password.getText());
         				
         						MainClass.taskTable = CreateTable.populateTaskTableFromDB();
+        						MainClass.dataBaseConnectionStatus.setText("Connection Established");
         					}
         					
                         	
