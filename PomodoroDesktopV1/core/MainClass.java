@@ -42,6 +42,7 @@ import objects.WillyTask;
 import sounds.PlaySounds;
 import tables.CreateTable;
 import tables.GenericCellFactory;
+import database.DatabaseQuerys;
 import database.HandlePasswords;
 
 public class MainClass extends Application {
@@ -125,14 +126,27 @@ public class MainClass extends Application {
 		ToolBar darkToolbar = createToolBar("mainToolbar");
 		darkToolbar.getStylesheets().add(styledToolBarCss);
 
-		// setupTableListeners();
 
 		// grey out start stop button
 		startStop.setText("--");
 
-		// make an default table initially
-		taskTable = CreateTable.makeDefaultTable();
+		
+		// Set up the task list
+		if (!NO_DATABASE) {
+			// get table from DB
 
+			// create the password field and populate the table from DB
+			setupPWField(primaryStage);
+			 taskTable = CreateTable.populateTaskTableFromDB();
+
+	
+
+		}
+		else
+		{
+		// make an default table from local stuff
+		taskTable = CreateTable.makeDefaultTable();
+		}
 		// set up the mouse click listener so we know which task has been
 		// selected in the table
 		taskTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -202,29 +216,7 @@ public class MainClass extends Application {
 						.children(dataBaseConnectionStatus,clockProgressContainer, darkToolbar,
 								taskTable).build());
 
-		// Set up the task list
-		if (!NO_DATABASE) {
-			// get table from DB
-
-			// create the password field and populate the table from DB
-			setupPWField(primaryStage);
-			// taskTable = CreateTable.populateTaskTableFromDB();
-
-			// make this threaded when it works :D: :D:D:D:D ::ADS~Fasdf
-			//
-			// Thread popFromDBThread = new Thread() {
-			// public void run() {
-			//
-			// taskTable = CreateTable.populateTaskTableFromDB();
-			//
-			//
-			// }
-			//
-			// };
-			//
-			// popFromDBThread.start();
-
-		}
+	
 
 	}
 
@@ -319,6 +311,14 @@ public class MainClass extends Application {
 //			pwGrid = new GridPane();
 //		}
 		}
+		else{
+			// password was right
+			// make the text small
+			dataBaseConnectionStatus.setVisible(false);
+			dataBaseConnectionStatus.setScaleY(0);
+			dataBaseConnectionStatus.setScaleX(0);
+			
+		}
 	}
 
 	/**
@@ -394,6 +394,7 @@ public class MainClass extends Application {
 
 			currentTask.completedPomsProperty().set(
 					currentTask.completedPomsProperty().intValue() + 1);
+			DatabaseQuerys.updateTask(currentTask);
 			PlaySounds.playAlarmSound();
 			startStop();
 

@@ -36,7 +36,7 @@ public class HandlePasswords {
 
 	
 	/**
-	 * checks for the existance of password file
+	 * Checks for the existence of password file and makes it the active password if it finds one
 	 * 
 	 * @return returns a the password if it exists, null otherwise
 	 */
@@ -53,7 +53,11 @@ public class HandlePasswords {
 		// Always wrap FileReader in BufferedReader.
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		
-		return bufferedReader.readLine();
+		String password =  bufferedReader.readLine();
+		// gives the password to the handle passwords class
+		HandlePasswords.password = password;
+		
+		return password;
 		}
 		 catch (FileNotFoundException e) {
 				return null; // the password could not be found

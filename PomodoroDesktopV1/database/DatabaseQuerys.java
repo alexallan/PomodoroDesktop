@@ -123,5 +123,59 @@ public class DatabaseQuerys {
 		}
 		return data;
 	}
+	
+	
+	public synchronized static boolean updateTask(WillyTask task)
+	{
+		try {
+			Statement stmt;
+			
+
+			// Register the JDBC driver for MySQL.
+			Class.forName(GlobalConstants.DB_MSQLREGISTRY);
+
+			// Define URL of database server for
+			// database named mysql on the localhost
+			// with the default port number 3306.
+			String url = GlobalConstants.DB_URL;
+
+			// Get a connection to the database for a
+			// user named root with a blank password.
+			// This user is the default administrator
+			// having full privileges to do anything.
+			Connection con = DriverManager.getConnection(url,
+					GlobalConstants.DB_USERNAME, HandlePasswords.getPassword());
+			
+			
+
+			// Display URL and connection information
+			System.out.println("URL: " + url);
+			System.out.println("Connection established successfully: " + con);
+
+			
+			
+//			This is how the sql should appear
+//			UPDATE taskTable
+//			SET taskName='fury wank', numberOfPomodorosSpent='2'
+//			WHERE taskName='fury wank';
+//			
+			// build the sql update statement
+			String update = "UPDATE "+ GlobalConstants.TABLE_NAME_TASK;
+			String set = " SET taskName = '"+ task.taskNameProperty().get()+"', numberOfPomodorosSpent = "+String.valueOf(task.completedPomsProperty().get());
+			String where = " WHERE taskName = "+GlobalConstants.TABLE_NAME_TASK+";";
+			String updateStatement = update+set+where;
+			
+			// send the statement to the db
+			stmt = con.createStatement();
+			stmt.executeQuery(updateStatement);
+			
+			// Tidy up
+			System.out.println("Closing connection: " + con);
+			con.close();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
 
 }
