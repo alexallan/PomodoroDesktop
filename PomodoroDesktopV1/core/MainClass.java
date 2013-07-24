@@ -38,6 +38,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import login.PasswordDialogService;
 import login.PasswordDialogService.DialogService;
+import objects.NewTaskDialogService;
 import objects.WillyTask;
 import sounds.PlaySounds;
 import tables.CreateTable;
@@ -64,6 +65,9 @@ public class MainClass extends Application {
 
 	/** The button that creates a new task */
 	private Button newTask;
+	
+	/** The primary stage*/
+	private Stage primaryStage;
 
 	// / TIME MANAGEMENT GUBBINZ
 
@@ -108,12 +112,17 @@ public class MainClass extends Application {
 	private WillyTask currentTask;
 
 	/** The login dialog service */
-	private DialogService dialogService;
+	private DialogService loginDialogService;
+	
+	/** The new task dialog service*/
+	private objects.NewTaskDialogService.DialogService newTaskDialogService;
 
 	private void init(Stage primaryStage) {
 		Group root = new Group();
 		primaryStage.setScene(new Scene(root));
 
+		// get the primary stage as a field
+		this.primaryStage = primaryStage;
 		// configure the timeline - deals with passing of time
 		configureTimeline();
 		
@@ -231,85 +240,13 @@ public class MainClass extends Application {
 		// if its null or doesnt work that means we need to enter it
 		if (pw == null || !HandlePasswords.checkIfRightPW(GlobalConstants.DB_USERNAME,pw)) {
 
-			if (dialogService != null) {
-				dialogService.hide();
+			if (loginDialogService != null) {
+				loginDialogService.hide();
 			}
 			PasswordDialogService login = new PasswordDialogService();
-			dialogService = login.createLoginDialog(primaryStage);
-			dialogService.start();
+			loginDialogService = login.createLoginDialog(primaryStage);
+			loginDialogService.start();
 			
-//			// if the pw was wrong give them X tries to go again
-//			if ( !HandlePasswords.gotCorrectPW())
-//			{
-//				for (int x = 0 ; x < 3; x++)
-//				{
-//					// try another pw
-//					login = new PasswordDialogService();
-//					dialogService = login.createLoginDialog(primaryStage);
-//					dialogService.start();
-//					
-//					//if we now have the right password break the loop
-//					if (HandlePasswords.gotCorrectPW())
-//						break;
-//					
-//				}
-//				
-//				// if we still dont have the right pw 
-//				
-//				if ( !HandlePasswords.gotCorrectPW())
-//				{
-//					System.err.println( "Got password wrong to many times, noob");
-//					//exit the program
-//					System.exit(0);
-//				}
-//			}
-
-//			Label label = new Label("Database Password");
-//			final PasswordField pb = new PasswordField();
-//			Button pwSubmit = new Button("Submit");
-//
-//			pwSubmit.setOnAction(new EventHandler<ActionEvent>() {
-//				public void handle(ActionEvent event) {
-//
-//					// if the passwords wrong show a dialog - loads of code
-//					setDatabaseUsernameAndPassword(pb.getText());
-//					if (!HandlePasswords.checkIfRightPW(pb.getText())) {
-//						final Stage dialogStage = new Stage();
-//						Button cunt = new Button("Im a cunt.");
-//						cunt.setOnAction(new EventHandler<ActionEvent>() {
-//							public void handle(ActionEvent event) {
-//								dialogStage.close();
-//							}
-//						});
-//
-//						dialogStage.initModality(Modality.WINDOW_MODAL);
-//						dialogStage.setScene(new Scene(VBoxBuilder.create()
-//								.children(new Text("Pasword wrong"), cunt)
-//								.alignment(Pos.CENTER).padding(new Insets(5))
-//								.build()));
-//						// this waits on the user input before continuing with
-//						// the code
-//						dialogStage.showAndWait();
-//					} else {
-//						// password right - close the stage and write it to file
-//						HandlePasswords.writePwFile(pb.getText());
-//						pwGrid.setVisible(false);
-//						pwGrid.setScaleX(0);
-//
-//					}
-//				}
-//			});
-//
-//			// add text to the main root group
-//
-//			pwGrid = new GridPane();
-//			pwGrid.add(label, 0, 0);
-//			pwGrid.add(pb, 1, 0);
-//			pwGrid.add(pwSubmit, 2, 0);
-//			pwGrid.setHgap(10);
-//		} else {// else just make pw grid an empty cunt
-//			pwGrid = new GridPane();
-//		}
 		}
 		else{
 			// password was right
@@ -346,7 +283,7 @@ public class MainClass extends Application {
 			public void handle(ActionEvent t) {
 
 				// starts or stops the timer
-				startStop();
+				makeNewTask();
 			}
 		});
 
@@ -354,6 +291,13 @@ public class MainClass extends Application {
 
 		startStop, newTask, new Slider()).build();
 
+	}
+
+	protected void makeNewTask() {
+		//TODO
+		NewTaskDialogService newTask = new NewTaskDialogService();
+		newTaskDialogService = newTask.createLoginDialog(primaryStage);
+		loginDialogService.start();
 	}
 
 	// / TIME BITS

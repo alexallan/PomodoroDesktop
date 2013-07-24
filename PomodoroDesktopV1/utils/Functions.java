@@ -24,8 +24,8 @@ public class Functions {
         GregorianCalendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UK"));
         calendar.setTimeInMillis(timeInMillis);
        // System.out.println("GregorianCalendar -"+sdf.format(calendar.getTime()));
-        
-		return sdf.format(calendar.getTime());
+        String output = sdf.format(calendar.getTime());
+		return output;
 	}
 
 }

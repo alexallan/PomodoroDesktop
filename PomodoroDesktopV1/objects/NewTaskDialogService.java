@@ -1,4 +1,4 @@
-package login;
+package objects;
 import tables.CreateTable;
 import core.GlobalConstants;
 import core.MainClass;
@@ -39,7 +39,7 @@ import javafx.stage.StageStyle;
 /**
  * {@linkplain DialogService} Demo
  */
-public class PasswordDialogService extends Application {
+public class NewTaskDialogService extends Application {
  
     private DialogService dialogService;
  
@@ -86,7 +86,7 @@ public class PasswordDialogService extends Application {
         primaryStage.setTitle("Dialog Service Demo");
         primaryStage.setScene(new Scene(rootNode, 800, 500, Color.BLACK));
         primaryStage.getScene().getStylesheets().add(
-                PasswordDialogService.class.getResource("dialog.css").toExternalForm());
+                NewTaskDialogService.class.getResource("dialog.css").toExternalForm());
         primaryStage.show();
     }
  
@@ -99,11 +99,13 @@ public class PasswordDialogService extends Application {
      */
     public DialogService createLoginDialog(final Stage primaryStage) {
     	primaryStage.getScene().getStylesheets().add(
-                PasswordDialogService.class.getResource("dialog.css").toExternalForm());
-        final TextField username = TextFieldBuilder.create().text(
-                GlobalConstants.DB_USERNAME).build();
-        final PasswordField password = PasswordFieldBuilder.create().promptText(
-                "Password").build();
+                NewTaskDialogService.class.getResource("dialog.css").toExternalForm());
+//        final TextField username = TextFieldBuilder.create().text(
+//                GlobalConstants.DB_USERNAME).build();
+//        final PasswordField password = PasswordFieldBuilder.create().promptText(
+//                "Password").build();
+    	final TextField taskName = TextFieldBuilder.create().text("New Task").build();
+    	
         final Button closeBtn = ButtonBuilder.create().text("Close").build();
         final Service<Void> submitService = new Service<Void>() {
             @Override
@@ -111,37 +113,29 @@ public class PasswordDialogService extends Application {
                 return new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        final boolean hasUsername = !username.getText()
+                        final boolean hasText = !taskName.getText()
                                 .isEmpty();
-                        final boolean hasPassword = !password.getText()
-                                .isEmpty();
-                        if (hasUsername && hasPassword) {
+                        
+                        if (hasText) {
                             // TODO : perform some sort of authentication here
                             // or you can throw an exception to see the error
                             // message in the dialog window
                         	
                         	// if the passwords wrong show a dialog - loads of code
-                        	
-                        	boolean passwordRight = HandlePasswords.checkIfRightPW(username.getText(),password.getText());
+                        	// TODO have some validity checking here
+                        	boolean taskNameOk = true;
 
-        					if (!passwordRight) {
-        						   throw new RuntimeException("Invalid Username or Password");
+        					if (!taskNameOk) {
+        						   throw new RuntimeException("Invalid task name");
         					} else {
         						// password right - close the stage and write it to file
-            					MainClass.setDatabaseUsernameAndPassword(username.getText(),password.getText());
-        						HandlePasswords.writePwFile(password.getText());
-        				
-        						MainClass.taskTable = CreateTable.populateTaskTableFromDB();
-        						MainClass.dataBaseConnectionStatus.setText("Connection Established");
+            					
         					}
         					
                         	
                         } else {
-                            final String invalidFields = (!hasUsername ? username
-                                    .getPromptText() : "")
-                                    + ' '
-                                    + (!hasPassword ? password.getPromptText()
-                                            : "");
+                            final String invalidFields = (!hasText ? taskName
+                                    .getPromptText() : "");
                             throw new RuntimeException("Invalid "
                                     + invalidFields);
                         }
@@ -151,9 +145,9 @@ public class PasswordDialogService extends Application {
             }
         };
         final DialogService dialogService = dialog(primaryStage,
-                "Login Dialog Window",
-                "Please provide a username and password to access the database",
-                null, "Login", 550d, 300d, submitService, closeBtn, username, password);
+                "New Task",
+                "Please provide details of new task",
+                null, "Login", 550d, 300d, submitService, closeBtn, taskName);
         if (closeBtn != null) {
               closeBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
