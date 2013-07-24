@@ -33,16 +33,17 @@ import javafx.beans.property.StringProperty;
          * @param completedPoms
          * @param dateStarted
          */
-        public WillyTask(String fName, int completedPoms, int dateStarted) {
+        public WillyTask(String fName, int completedPoms, long dateStarted) {
             this.taskName = new SimpleStringProperty(fName);
-            this.completedPoms = new SimpleIntegerProperty(0);
-            this.dateStartedMilis = new SimpleLongProperty(System.currentTimeMillis());
+            this.completedPoms = new SimpleIntegerProperty(completedPoms);
+            this.dateStartedMilis = new SimpleLongProperty(dateStarted);
         }
         
         public StringProperty taskNameProperty() { return taskName; }
         public IntegerProperty completedPomsProperty() { return completedPoms; }
         public StringProperty dateStartedMilisProperty() { return new SimpleStringProperty(Functions.turnDateInMillisToString(dateStartedMilis.longValue())); }
-    }
+        
+ }
  
  
 

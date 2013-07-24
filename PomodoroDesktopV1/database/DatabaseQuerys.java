@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -104,10 +105,11 @@ public class DatabaseQuerys {
 			try {
 				while (tableContents.next()) {
 					// add a new task from the result object
-					data.add(new WillyTask(tableContents
-							.getString(GlobalConstants.COL_TASKNAME), tableContents
-							.getInt(GlobalConstants.COL_NUM_SPENT), tableContents
-							.getInt(GlobalConstants.COL_DATE_CREATED)));
+					
+					String name = tableContents.getString(GlobalConstants.COL_TASKNAME);
+					int spent = tableContents.getInt(GlobalConstants.COL_NUM_SPENT);
+					Date date = tableContents.getDate(GlobalConstants.COL_DATE_CREATED);
+					data.add(new WillyTask(name,spent , date.getTime() ));
 
 				}
 			} catch (SQLException e) {
@@ -162,12 +164,12 @@ public class DatabaseQuerys {
 			// build the sql update statement
 			String update = "UPDATE "+ GlobalConstants.TABLE_NAME_TASK;
 			String set = " SET taskName = '"+ task.taskNameProperty().get()+"', numberOfPomodorosSpent = "+String.valueOf(task.completedPomsProperty().get());
-			String where = " WHERE taskName = "+GlobalConstants.TABLE_NAME_TASK+";";
+			String where = " WHERE taskName = '"+ task.taskNameProperty().get()+"';";
 			String updateStatement = update+set+where;
 			
 			// send the statement to the db
 			stmt = con.createStatement();
-			stmt.executeQuery(updateStatement);
+			stmt.executeUpdate(updateStatement);
 			
 			// Tidy up
 			System.out.println("Closing connection: " + con);
