@@ -297,7 +297,7 @@ public class MainClass extends Application {
 		//TODO
 		NewTaskDialogService newTask = new NewTaskDialogService();
 		newTaskDialogService = newTask.createLoginDialog(primaryStage);
-		loginDialogService.start();
+		newTaskDialogService.start();
 	}
 
 	// / TIME BITS

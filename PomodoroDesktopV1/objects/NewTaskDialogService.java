@@ -2,6 +2,7 @@ package objects;
 import tables.CreateTable;
 import core.GlobalConstants;
 import core.MainClass;
+import database.DatabaseQuerys;
 import database.HandlePasswords;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -120,10 +121,14 @@ public class NewTaskDialogService extends Application {
                             // TODO : perform some sort of authentication here
                             // or you can throw an exception to see the error
                             // message in the dialog window
-                        	
-                        	// if the passwords wrong show a dialog - loads of code
+               
                         	// TODO have some validity checking here
                         	boolean taskNameOk = true;
+                        	
+                        	// make a new task
+                        	WillyTask newTask = new WillyTask(taskName.getText());
+                        	// send it to database
+                        	DatabaseQuerys.newTask(newTask);
 
         					if (!taskNameOk) {
         						   throw new RuntimeException("Invalid task name");
@@ -147,7 +152,7 @@ public class NewTaskDialogService extends Application {
         final DialogService dialogService = dialog(primaryStage,
                 "New Task",
                 "Please provide details of new task",
-                null, "Login", 550d, 300d, submitService, closeBtn, taskName);
+                null, "New Task", 550d, 300d, submitService, closeBtn, taskName);
         if (closeBtn != null) {
               closeBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override

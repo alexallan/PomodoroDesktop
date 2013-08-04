@@ -1,2 +1,1 @@
-
-select * from table1
+UPDATE table1 SET taskName = 'Wrangle Cock', numberOfPomodorosSpent = 1 WHERE taskName = Wrangle Cock
