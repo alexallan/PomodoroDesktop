@@ -127,8 +127,18 @@ public class NewTaskDialogService extends Application {
                         	
                         	// make a new task
                         	WillyTask newTask = new WillyTask(taskName.getText());
-                        	// send it to database
-                        	DatabaseQuerys.newTask(newTask);
+                        	
+                        	
+                        	// send it to database using a thread
+                        	DatabaseQuerys.newTaskInSeparateThread(newTask);
+                        	
+                        	
+                        	// this doesnt work
+                        	//CreateTable.addTaskToTable(newTask);
+                        	
+                  
+                        	// make it go
+                        	dialogService.hide();
 
         					if (!taskNameOk) {
         						   throw new RuntimeException("Invalid task name");

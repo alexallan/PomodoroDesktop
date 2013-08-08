@@ -21,17 +21,21 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-/**
- * A simple table with a header row.
- * 
- * @see javafx.scene.control.TableCell
- * @see javafx.scene.control.TableColumn
- * @see javafx.scene.control.TablePosition
- * @see javafx.scene.control.TableRow
- * @see javafx.scene.control.TableView
- */
-public class CreateTable {
 
+
+
+
+public class CreateTable {
+	
+	/** This object when updated will dynamically change what is in the table*/
+	public static ObservableList<WillyTask> data;
+
+	
+	@Deprecated 
+	/***
+	 * Makes  a default table with a load of bollocks in it for when we arent using the database
+	 * @return
+	 */
 	public static TableView<WillyTask> makeDefaultTable() {
 		Group root = new Group();
 
@@ -64,7 +68,27 @@ public class CreateTable {
 		return tableView;
 
 	}
+	
+	/**It should be just this simple to update the table
+	 * */
+	public static void updateTableFromDB()
+	{
+		data = DatabaseQuerys.pullTaskTable();
+	}
+	
+	/**
+	 * Adds a task to the table
+	 * @param task the task we wish to add
+	 */
+	public static void addTaskToTable(WillyTask task)
+	{
+		data.add(task); // TODO doesnt work
+	}
 
+	/**
+	 * Populates the table from the database
+	 * @return a populate task table
+	 */
 	public static TableView<WillyTask> populateTaskTableFromDB() {
 
 		// we want to populate the table from the database using a new thread
