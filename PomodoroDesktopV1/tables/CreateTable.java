@@ -94,7 +94,7 @@ public class CreateTable {
 		// we want to populate the table from the database using a new thread
 		// (so it doesnt lag to fuck)
 
-		ObservableList<WillyTask>  data = DatabaseQuerys.pullTaskTable();
+		 data = DatabaseQuerys.pullTaskTable();
 	
 		TableColumn taskNameCol = new TableColumn();
 		taskNameCol.setText("Task Name");

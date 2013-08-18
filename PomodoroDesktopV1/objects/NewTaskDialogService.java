@@ -134,7 +134,7 @@ public class NewTaskDialogService extends Application {
                         	
                         	
                         	// this doesnt work
-                        	//CreateTable.addTaskToTable(newTask);
+                        	CreateTable.addTaskToTable(newTask);
                         	
                   
                         	// make it go
@@ -159,10 +159,12 @@ public class NewTaskDialogService extends Application {
                 };
             }
         };
-        final DialogService dialogService = dialog(primaryStage,
+
+        dialogService = dialog(primaryStage,
                 "New Task",
                 "Please provide details of new task",
                 null, "New Task", 550d, 300d, submitService, closeBtn, taskName);
+        
         if (closeBtn != null) {
               closeBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
