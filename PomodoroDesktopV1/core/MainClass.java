@@ -30,11 +30,14 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.ToolBarBuilder;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import login.PasswordDialogService;
 import login.PasswordDialogService.DialogService;
@@ -119,7 +122,15 @@ public class MainClass extends Application {
 
 	private void init(Stage primaryStage) {
 		Group root = new Group();
-		primaryStage.setScene(new Scene(root));
+		Scene scene = new Scene(root);
+		primaryStage.setScene(scene);
+		int width = 600;
+		int height = 600;
+//		primaryStage.initModality(Modality.APPLICATION_MODAL);
+//		primaryStage.initStyle(StageStyle.TRANSPARENT);
+//        final VBox content = VBoxBuilder.create().styleClass("dialog").build();
+//        content.setMaxSize(width, height);
+//        primaryStage.setScene(new Scene(content, width, height, Color.TRANSPARENT));
 
 		// get the primary stage as a field
 		this.primaryStage = primaryStage;
@@ -131,9 +142,10 @@ public class MainClass extends Application {
 
 		// Set up the toolbar
 		String styledToolBarCss = MainClass.class.getResource(
-				"StyledToolBar.css").toExternalForm();
+				"mainstyle.css").toExternalForm();
+		scene.getStylesheets().add(styledToolBarCss);
 		ToolBar darkToolbar = createToolBar("mainToolbar");
-		darkToolbar.getStylesheets().add(styledToolBarCss);
+	//	darkToolbar.getStylesheets().add(styledToolBarCss);
 
 
 		// grey out start stop button
